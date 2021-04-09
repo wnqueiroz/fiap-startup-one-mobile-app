@@ -1,7 +1,7 @@
 import React from 'react';
 import { SafeAreaView, StatusBar, useColorScheme } from 'react-native';
 
-import { SignIn } from './screens/SignIn';
+import { SignUp } from './screens/SignUp';
 
 export const App: React.FC = () => {
   const isDarkMode = useColorScheme() === 'dark';
@@ -13,7 +13,7 @@ export const App: React.FC = () => {
     >
       <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
 
-      <SignIn />
+      <SignUp />
     </SafeAreaView>
   );
 };

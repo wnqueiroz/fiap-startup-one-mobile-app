@@ -5,7 +5,7 @@ import {
 } from 'react-native';
 
 export const Divider: React.FC = ({ children }) => (
-  <View style={{ flexDirection: 'row', marginBottom: 20 }}>
+  <View style={{ flexDirection: 'row', marginBottom: 20, maxWidth: 295 }}>
     <View
       style={styles.Line}
     />

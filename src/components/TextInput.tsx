@@ -13,6 +13,7 @@ interface TextInputProps {
   onChangeText?: (value: string) => void;
   type?: 'text' | 'password';
   keyboardType?: KeyboardType;
+  autoCapitalize?: 'none' | 'sentences' | 'words' | 'characters';
 }
 
 export const TextInput: React.FC<TextInputProps> = ({
@@ -21,6 +22,7 @@ export const TextInput: React.FC<TextInputProps> = ({
   onChangeText,
   type = 'text',
   keyboardType = 'default',
+  autoCapitalize = 'none',
 }) => {
   const [value, setValue] = useState(initialValue || '');
   const [isFocused, setIsFocused] = useState(false);
@@ -38,7 +40,7 @@ export const TextInput: React.FC<TextInputProps> = ({
       <Text style={styles.TextInputLabel}>{label}</Text>
       <BaseTextInput
         keyboardType={keyboardType}
-        autoCapitalize="none"
+        autoCapitalize={autoCapitalize}
         autoCompleteType="off"
         autoCorrect={false}
         style={textInputStyles}
