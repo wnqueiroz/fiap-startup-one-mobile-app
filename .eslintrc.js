@@ -27,6 +27,7 @@ module.exports = {
         allowExpressions: true,
       },
     ],
+    'import/prefer-default-export': 'off',
     'import/extensions': [
       'error',
       'ignorePackages',
@@ -43,6 +44,7 @@ module.exports = {
         alphabetize: { order: 'asc', ignoreCase: true },
       },
     ],
+    'global-require': 'off',
   },
   settings: {
     'import/resolver': {
