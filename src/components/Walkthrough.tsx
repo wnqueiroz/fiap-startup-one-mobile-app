@@ -42,7 +42,7 @@ export const Walkthrough: React.FC = () => {
       const alreadyFinished = await AsyncStorage.getItem(ASYNC_STORAGE_KEYS.APP_WALKTHROUGH);
 
       if (alreadyFinished) {
-        navigation.navigate(SCREENS.HOME);
+        navigation.navigate(SCREENS.MAIN_BOTTOM);
       } else {
         setLoading(false);
       }
@@ -57,7 +57,7 @@ export const Walkthrough: React.FC = () => {
       const pageName = `WALKTHROUGH_${currentStep}`;
       const isLast = index === contents.length - 1;
 
-      const nextPageName = isLast ? SCREENS.HOME : `WALKTHROUGH_${currentStep + 1}`;
+      const nextPageName = isLast ? SCREENS.MAIN_BOTTOM : `WALKTHROUGH_${currentStep + 1}`;
       const buttonLabel = isLast ? 'Começar!' : 'Próximo';
 
       return (

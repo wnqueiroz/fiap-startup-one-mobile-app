@@ -6,24 +6,41 @@ import 'react-native-gesture-handler';
 import { NavigationContainer } from '@react-navigation/native';
 
 import { AuthProvider } from './contexts/auth';
+import { StatusBarProvider, useStatusBar } from './contexts/statusBar';
 import Routes from './routes';
+
+const StatusBarBg: React.FC = () => {
+  const { color } = useStatusBar();
+
+  return (
+    <SafeAreaView style={{
+      flex: 0,
+      backgroundColor: color,
+    }}
+    />
+  );
+};
 
 export const App: React.FC = () => {
   const isDarkMode = useColorScheme() === 'dark';
 
   return (
-    <SafeAreaView style={{
-      flex: 1,
-      backgroundColor: '#fff',
-    }}
-    >
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
+    <StatusBarProvider>
+      <StatusBarBg />
+      <SafeAreaView style={{
+        flex: 1,
+      }}
+      >
+        <StatusBar
+          barStyle={isDarkMode ? 'light-content' : 'dark-content'}
+        />
 
-      <NavigationContainer>
-        <AuthProvider>
-          <Routes />
-        </AuthProvider>
-      </NavigationContainer>
-    </SafeAreaView>
+        <NavigationContainer>
+          <AuthProvider>
+            <Routes />
+          </AuthProvider>
+        </NavigationContainer>
+      </SafeAreaView>
+    </StatusBarProvider>
   );
 };

@@ -1,8 +1,10 @@
 export const SCREENS = {
   SIGN_IN: 'SIGN_IN',
   SIGN_UP: 'SIGN_UP',
+  MAIN_BOTTOM: 'MAIN_BOTTOM',
   HOME: 'HOME',
   WALKTHROUGH: 'WALKTHROUGH',
+  RANKING: 'RANKING',
 };
 
 export const ASYNC_STORAGE_KEYS = {

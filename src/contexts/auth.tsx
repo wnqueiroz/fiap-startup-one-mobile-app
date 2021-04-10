@@ -8,12 +8,14 @@ import jwtDecode from 'jwt-decode';
 import { ASYNC_STORAGE_KEYS } from '../contants';
 import * as api from '../services/api';
 
-type User = Record<string, unknown> | null
+type User = {
+  name: string
+}
 
 interface AuthContextData {
   signed: boolean
   loading: boolean
-  user: User
+  user: User | null
   signIn(params: { email: string, password: string }): Promise<void>
   signUp(params: { name: string, email: string, password: string }): Promise<void>
 }
@@ -21,7 +23,7 @@ interface AuthContextData {
 const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 
 export const AuthProvider: React.FC = ({ children }) => {
-  const [user, setUser] = useState<User>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
   function setApiInstanceToken(authToken: string): void {
