@@ -4,6 +4,7 @@ import {
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
+import { useNavigation } from '@react-navigation/native';
 import {
   Fade, Placeholder, PlaceholderLine,
 } from 'rn-placeholder';
@@ -11,6 +12,7 @@ import {
 import { SearchBar } from '../components/SearchBar';
 import { ServiceSearchList } from '../components/Service/ServiceSearchList';
 import { Service } from '../components/Service/ServiceSearchListItem';
+import { SCREENS } from '../contants';
 import { useAuth } from '../contexts/auth';
 import { useStatusBar } from '../contexts/statusBar';
 import * as appointments from '../services/appointments';
@@ -18,6 +20,8 @@ import * as appointments from '../services/appointments';
 export const Home: React.FC = () => {
   const { user } = useAuth();
   const { setColor } = useStatusBar();
+  const { navigate } = useNavigation();
+
   const [loading, setLoading] = useState(true);
   const [appointmentList, setAppointmentList] = useState([]);
   const [searchResults, setSearchResults] = useState([]);
@@ -33,7 +37,9 @@ export const Home: React.FC = () => {
   }
 
   function handleServiceDetails(service: Service): void {
-    console.log(service);
+    navigate(SCREENS.SERVICE_DETAILS, {
+      service,
+    });
   }
 
   useEffect(() => {

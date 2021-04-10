@@ -1,13 +1,16 @@
 import React from 'react';
+import { TouchableOpacity } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { useNavigation } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
 import { Walkthrough } from '../components/Walkthrough';
 import { SCREENS } from '../contants';
 import { Home } from '../screens/Home';
 import { Ranking } from '../screens/Ranking';
+import { ServiceDetails } from '../screens/ServiceDetails';
 
 const AppStack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -46,6 +49,23 @@ const TabRoutes: React.FC = () => (
   </Tab.Navigator>
 );
 
+const HeaderBackButton: React.FC = () => {
+  const { goBack } = useNavigation();
+
+  return (
+    <TouchableOpacity
+      activeOpacity={0.5}
+      onPress={() => goBack()}
+    >
+      <Ionicons
+        size={20}
+        name="ios-arrow-back"
+        style={{ color: '#fff', marginLeft: 10 }}
+      />
+    </TouchableOpacity>
+  );
+};
+
 export const AppRoutes: React.FC = () => (
   <AppStack.Navigator
     screenOptions={{
@@ -64,6 +84,28 @@ export const AppRoutes: React.FC = () => (
         headerShown: false,
         gestureEnabled: false,
       }}
+    />
+    <AppStack.Screen
+      options={{
+        headerShown: true,
+
+        title: 'Detalhes do serviço',
+        headerStyle: {
+          backgroundColor: '#FF7675',
+        },
+        headerBackTitleStyle: {
+          color: 'white',
+        },
+        headerTitleStyle: {
+          color: '#fff',
+        },
+        headerLeft: () => (
+          <HeaderBackButton />
+        ),
+        cardStyle: { backgroundColor: '#EEE' },
+      }}
+      name={SCREENS.SERVICE_DETAILS}
+      component={ServiceDetails}
     />
   </AppStack.Navigator>
 );

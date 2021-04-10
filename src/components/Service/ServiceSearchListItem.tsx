@@ -10,13 +10,13 @@ export type Service = {
 }
 
 interface ServiceSearchListItemProps {
-    isFirst: boolean
+    isFirst?: boolean
     data: Service
     onPressListItem: (item: Service)=> void
 }
 
 export const ServiceSearchListItem: React.FC<ServiceSearchListItemProps> = ({
-  isFirst, data, onPressListItem,
+  isFirst = false, data, onPressListItem,
 }) => (
   <TouchableOpacity
     activeOpacity={0.5}
