@@ -1,23 +1,57 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Image, StyleSheet, Text, View,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
+import {
+  Fade, Placeholder, PlaceholderLine,
+} from 'rn-placeholder';
+
 import { SearchBar } from '../components/SearchBar';
+import { ServiceSearchList } from '../components/Service/ServiceSearchList';
+import { Service } from '../components/Service/ServiceSearchListItem';
 import { useAuth } from '../contexts/auth';
 import { useStatusBar } from '../contexts/statusBar';
+import * as appointments from '../services/appointments';
 
 export const Home: React.FC = () => {
   const { user } = useAuth();
   const { setColor } = useStatusBar();
+  const [loading, setLoading] = useState(true);
+  const [appointmentList, setAppointmentList] = useState([]);
+  const [searchResults, setSearchResults] = useState([]);
+  const [showSearchListResults, setShowSearchListResults] = useState(false);
+
+  async function handleSearch(searchTerms: string): Promise<void> {
+    if (searchTerms.length) {
+      const response = await appointments.getServicesByName(searchTerms);
+
+      setSearchResults(response);
+      setShowSearchListResults(true);
+    }
+  }
+
+  function handleServiceDetails(service: Service): void {
+    console.log(service);
+  }
 
   useEffect(() => {
     setColor('#FF7675');
+
+    async function fetchAllAppointments(): Promise<void> {
+      const response = await appointments.getAll();
+
+      setLoading(false);
+
+      setAppointmentList(response);
+    }
+
+    fetchAllAppointments();
   }, []);
 
   return (
-    <View>
+    <View style={{ flex: 1 }}>
       <View style={styles.Header}>
         <View style={{
           flexDirection: 'row',
@@ -34,46 +68,84 @@ export const Home: React.FC = () => {
         </View>
       </View>
 
-      <SearchBar containerStyle={{
-        position: 'absolute',
-        left: 0,
-        right: 0,
-        marginTop: 110 - (48 / 2),
-      }}
+      <SearchBar
+        onBlur={handleSearch}
+        onClear={() => {
+          setShowSearchListResults(false);
+          setSearchResults([]);
+        }}
+        containerStyle={{
+          position: 'absolute',
+          left: 0,
+          right: 0,
+          marginTop: 110 - (48 / 2),
+        }}
       />
-      <View style={styles.Body}>
-        <Text style={{ color: '#292929', fontWeight: 'bold', fontSize: 19 }}>
-          Sua agenda
-        </Text>
 
-        <Image
-          style={styles.Image}
-          source={require('../assets/empty-calendar.png')}
-        />
-        <Text style={{
-          color: '#808080', fontWeight: 'bold', fontSize: 16, textAlign: 'center',
-        }}
-        >
-          Sem compromissos
-        </Text>
-        <Text style={{
-          color: '#808080',
-          fontSize: 12,
-          textAlign: 'center',
-          flexWrap: 'wrap',
-          marginTop: 30,
-          paddingHorizontal: 20,
-        }}
-        >
-          Busque por serviços na barra de pesquisa. Seus compromissos marcados aparecerão aqui.
-        </Text>
+      <View style={styles.Body}>
+        {showSearchListResults
+          ? (
+            <ServiceSearchList
+              onPressListItem={handleServiceDetails}
+              data={searchResults}
+            />
+          ) : (
+            <AppointmentList
+              data={appointmentList}
+              loading={loading}
+            />
+          )}
       </View>
     </View>
   );
 };
 
+interface AppointmentListProps {
+  data?: any[],
+  loading?: boolean
+}
+
+const AppointmentList: React.FC<AppointmentListProps> = ({ data = [], loading = false }) => (loading ? (
+  <Placeholder
+    Animation={Fade}
+  >
+    <PlaceholderLine style={{ marginBottom: 20 }} />
+    <PlaceholderLine width={80} />
+    <PlaceholderLine />
+    <PlaceholderLine width={30} />
+    <PlaceholderLine width={80} height={48} style={{ alignSelf: 'center' }} />
+  </Placeholder>
+) : (
+  <>
+    <Text style={{ color: '#292929', fontWeight: 'bold', fontSize: 19 }}>
+      Sua agenda
+    </Text>
+
+    {!data.length ? (
+      <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+        <Image
+          style={styles.Image}
+          source={require('../assets/empty-calendar.png')}
+        />
+        <Text style={{ color: '#808080', fontSize: 16, fontWeight: 'bold' }}>
+          Sem compromissos
+        </Text>
+
+        <Text style={{
+          color: '#808080', fontSize: 12, marginTop: 10, textAlign: 'center',
+        }}
+        >
+          Busque por serviços na barra de pesquisa. Seus compromissos marcados aparecerão aqui.
+        </Text>
+      </View>
+    ) : null}
+
+  </>
+));
+
 const styles = StyleSheet.create({
   Body: {
+    flex: 1,
     paddingHorizontal: 10,
   },
   Header: {
@@ -84,7 +156,6 @@ const styles = StyleSheet.create({
     marginBottom: 30 + (48 / 2),
   },
   Image: {
-    alignSelf: 'center',
     width: 250,
     height: 250,
   },
