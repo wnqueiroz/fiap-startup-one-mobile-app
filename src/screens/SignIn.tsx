@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Image,
   StyleSheet, Text, View,
@@ -12,9 +12,21 @@ import { FacebookButton } from '../components/FacebookButton';
 import { TextInput } from '../components/TextInput';
 import { TextLink } from '../components/TextLink';
 import { SCREENS } from '../contants';
+import { useAuth } from '../contexts/auth';
 
 export const SignIn: React.FC = () => {
   const navigation = useNavigation();
+  const { signIn } = useAuth();
+
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  async function handleSignIn(): Promise<void> {
+    await signIn({
+      email,
+      password,
+    });
+  }
 
   return (
     <View style={styles.Container}>
@@ -26,16 +38,20 @@ export const SignIn: React.FC = () => {
         <TextInput
           label="Email"
           keyboardType="email-address"
+          onChangeText={(newValue) => {
+            setEmail(newValue);
+          }}
         />
         <TextInput
           label="Senha"
           type="password"
+          onChangeText={(newValue) => {
+            setPassword(newValue);
+          }}
         />
 
         <Button
-          onPress={() => {
-            console.warn('Not implemented');
-          }}
+          onPress={handleSignIn}
           buttonStyle={{
             marginTop: 20,
           }}
