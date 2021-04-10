@@ -3,6 +3,7 @@ import { Text, View } from 'react-native';
 
 import { createStackNavigator } from '@react-navigation/stack';
 
+import { Walkthrough } from '../components/Walkthrough';
 import { SCREENS } from '../contants';
 
 const AppStack = createStackNavigator();
@@ -15,7 +16,16 @@ const Home: React.FC = () => (
 );
 
 export const AppRoutes: React.FC = () => (
-  <AppStack.Navigator>
+  <AppStack.Navigator
+    screenOptions={{
+      headerShown: false,
+      cardStyle: { backgroundColor: '#fff' },
+    }}
+  >
+    <AppStack.Screen
+      name={SCREENS.WALKTHROUGH}
+      component={Walkthrough}
+    />
     <AppStack.Screen
       name={SCREENS.HOME}
       component={Home}

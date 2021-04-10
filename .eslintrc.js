@@ -45,6 +45,7 @@ module.exports = {
       },
     ],
     'global-require': 'off',
+    'max-len': 'off',
   },
   settings: {
     'import/resolver': {
