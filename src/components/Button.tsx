@@ -9,7 +9,6 @@ export interface ButtonProps {
   customButtonStyle?: StyleProp<ViewStyle>;
   customLabelStyle?: StyleProp<TextStyle>;
   icon?: any // TODO: set correct type,
-  isActive?: boolean
   type?: ButtonTypes
 }
 

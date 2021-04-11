@@ -17,7 +17,9 @@ interface ServiceDetailsProps {
     route: { params: { service: Service } }
 }
 
-export const ServiceDetails: React.FC<ServiceDetailsProps> = ({ route }) => {
+export const ServiceDetails: React.FC<ServiceDetailsProps> = ({
+  route,
+}) => {
   const { service } = route.params;
 
   const [date, setDate] = useState<Date>(new Date());
@@ -27,7 +29,10 @@ export const ServiceDetails: React.FC<ServiceDetailsProps> = ({ route }) => {
   const navigation = useNavigation();
 
   function getDropdownItems(): DropdownItem[] {
-    const data = service.servicePeriods.map(({ id, startTime, endTime }) => ({
+    const data = service.servicePeriods.map(({
+      id,
+      startTime, endTime,
+    }) => ({
       label: prettyTime(startTime, endTime),
       value: id,
     }));
@@ -105,7 +110,10 @@ export const ServiceDetails: React.FC<ServiceDetailsProps> = ({ route }) => {
           items={getDropdownItems()}
           onSelect={(newPeriod) => setPeriod(newPeriod)}
         />
-        <Button onPress={handleAppointment} isActive={enableButton}>
+        <Button
+          onPress={handleAppointment}
+          type={enableButton ? 'default' : 'disabled'}
+        >
           Agendar
         </Button>
       </Card>
