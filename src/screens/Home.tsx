@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {
-  StyleSheet, Text, View,
+  StyleSheet, Text, TouchableOpacity, View,
 } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -22,7 +22,7 @@ interface HomeProps {
 export const Home: React.FC<HomeProps> = ({ route }) => {
   const { refresh } = route.params;
 
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
   const { setColor } = useStatusBar();
   const navigation = useNavigation();
 
@@ -83,11 +83,16 @@ export const Home: React.FC<HomeProps> = ({ route }) => {
         }}
         >
           <Text style={{ fontSize: 16, color: '#fff' }}>Olá {user?.name}!</Text>
-          <Ionicons
-            size={25}
-            name="ios-notifications-outline"
-            color="#fff"
-          />
+          <TouchableOpacity
+            activeOpacity={0.5}
+            onPress={() => logout()}
+          >
+            <Ionicons
+              size={25}
+              name="ios-log-out-outline"
+              color="#fff"
+            />
+          </TouchableOpacity>
         </View>
       </View>
 

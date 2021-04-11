@@ -7,6 +7,7 @@ import jwtDecode from 'jwt-decode';
 
 import { ASYNC_STORAGE_KEYS } from '../contants';
 import * as api from '../services/api';
+import { useStatusBar } from './statusBar';
 
 type User = {
   name: string
@@ -17,6 +18,7 @@ interface AuthContextData {
   loading: boolean
   user: User | null
   signIn(params: { email: string, password: string }): Promise<void>
+  logout(): Promise<void>
   signUp(params: { name: string, email: string, password: string }): Promise<void>
 }
 
@@ -25,6 +27,8 @@ const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 export const AuthProvider: React.FC = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+
+  const { setColor } = useStatusBar();
 
   function setApiInstanceToken(authToken: string): void {
     api.instance.defaults.headers.Authorization = `Bearer ${authToken}`;
@@ -80,8 +84,18 @@ export const AuthProvider: React.FC = ({ children }) => {
     setLoading(false);
   }
 
+  async function logout(): Promise<void> {
+    setLoading(true);
+    setColor('#FFF'); // TODO: this only fix status bar color, remove later
+
+    await AsyncStorage.setItem(ASYNC_STORAGE_KEYS.AUTH_TOKEN, '');
+    await AsyncStorage.setItem(ASYNC_STORAGE_KEYS.AUTH_USER, '');
+
+    setUser(null);
+    setLoading(false);
+  }
+
   useEffect(() => {
-    AsyncStorage.clear();
     async function loadAsyncStorageData(): Promise<void> {
       const [storagedUser, storagedToken] = await AsyncStorage.multiGet([
         ASYNC_STORAGE_KEYS.AUTH_USER,
@@ -101,7 +115,7 @@ export const AuthProvider: React.FC = ({ children }) => {
 
   return (
     <AuthContext.Provider value={{
-      signed: !!user, user, signIn, signUp, loading,
+      signed: !!user, user, signIn, signUp, loading, logout,
     }}
     >
       {children}
