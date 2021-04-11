@@ -1,18 +1,21 @@
 import React from 'react';
-import { Text, View } from 'react-native';
+import {
+  StyleProp, Text, View, ViewStyle,
+} from 'react-native';
 
 interface CardProps {
     title: string
+    cardStyles?: StyleProp<ViewStyle>
 }
 
-export const Card: React.FC<CardProps> = ({ title, children }) => (
-  <View style={{
+export const Card: React.FC<CardProps> = ({ title, children, cardStyles }) => (
+  <View style={[{
     backgroundColor: '#FFF',
     padding: 20,
     borderRadius: 10,
     marginBottom: 20,
     flexGrow: 1,
-  }}
+  }, cardStyles]}
   >
     <View style={{
       flexDirection: 'row',

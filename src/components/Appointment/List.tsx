@@ -4,12 +4,32 @@ import {
 } from 'react-native';
 
 import { Section } from '../Section';
+import { AppointmentCard } from './Card';
 import { AppointmentCardPlaceholder } from './CardPlaceholder';
 
 interface AppointmentListProps {
     data?: any[],
     loading?: boolean
 }
+
+const EmptyList: React.FC = () => (
+  <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+    <Image
+      style={styles.Image}
+      source={require('../../assets/empty-calendar.png')}
+    />
+    <Text style={{ color: '#808080', fontSize: 16, fontWeight: 'bold' }}>
+      Sem compromissos
+    </Text>
+
+    <Text style={{
+      color: '#808080', fontSize: 12, marginTop: 10, textAlign: 'center',
+    }}
+    >
+      Busque por serviços na barra de pesquisa. Seus compromissos marcados aparecerão aqui.
+    </Text>
+  </View>
+);
 
 export const AppointmentList: React.FC<AppointmentListProps> = ({ data = [], loading = false }) => (loading ? (
   <>
@@ -20,24 +40,9 @@ export const AppointmentList: React.FC<AppointmentListProps> = ({ data = [], loa
 ) : (
   <>
     <Section title="Sua agenda">
-      {!data.length ? (
-        <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-          <Image
-            style={styles.Image}
-            source={require('../../assets/empty-calendar.png')}
-          />
-          <Text style={{ color: '#808080', fontSize: 16, fontWeight: 'bold' }}>
-            Sem compromissos
-          </Text>
-
-          <Text style={{
-            color: '#808080', fontSize: 12, marginTop: 10, textAlign: 'center',
-          }}
-          >
-            Busque por serviços na barra de pesquisa. Seus compromissos marcados aparecerão aqui.
-          </Text>
-        </View>
-      ) : null}
+      {!data.length
+        ? <EmptyList />
+        : data.map((item) => <AppointmentCard key={item.id} data={item} />)}
     </Section>
   </>
 ));

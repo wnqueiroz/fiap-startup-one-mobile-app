@@ -20,12 +20,12 @@ export const FacebookButton: React.FC<FacebookButtonProps> = ({
   return (
     <Button
       onPress={() => console.warn('Not Implemented')}
-      buttonStyle={[buttonStyle, {
+      customButtonStyle={[buttonStyle, {
         borderWidth: 2,
         borderColor: '#1877F2',
         backgroundColor: '#fff',
       }]}
-      labelStyle={{
+      customLabelStyle={{
         color: '#1877F2',
       }}
       icon={<Image style={{ marginRight: 10 }} source={require('../assets/facebok-icon-25x25.png')} />}

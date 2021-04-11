@@ -1,37 +1,86 @@
 import React from 'react';
 import {
   StyleProp,
-  StyleSheet, Text, TextStyle, TouchableOpacity, View, ViewStyle,
+  Text, TextStyle, TouchableOpacity, View, ViewStyle,
 } from 'react-native';
 
 export interface ButtonProps {
   onPress: () => void;
-  buttonStyle?: StyleProp<ViewStyle>;
-  labelStyle?: StyleProp<TextStyle>;
+  customButtonStyle?: StyleProp<ViewStyle>;
+  customLabelStyle?: StyleProp<TextStyle>;
   icon?: any // TODO: set correct type,
   isActive?: boolean
+  type?: ButtonTypes
 }
+
+type ButtonTypes = 'default' | 'disabled' | 'outline'
+
+type ButtonStyles = { [key in ButtonTypes]: StyleProp<ViewStyle> };
+type LabelStyles = { [key in ButtonTypes]: StyleProp<TextStyle> };
 
 export const Button: React.FC<ButtonProps> = ({
   onPress,
   children,
-  buttonStyle = {},
-  labelStyle = {},
+  customButtonStyle = {},
+  customLabelStyle = {},
   icon = null,
-  isActive = true,
+  type = 'default',
 }) => {
+  const isActive = type !== 'disabled';
+
   function handleOnPress(): void {
     if (isActive && onPress) onPress();
   }
+
+  const buttonDefaultStyles: StyleProp<ViewStyle> = {
+    width: 295,
+    height: 48,
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'center',
+    borderRadius: 5,
+  };
+
+  const labelDefaultStyles: StyleProp<TextStyle> = {
+    fontSize: 12,
+    fontWeight: 'bold',
+    textTransform: 'uppercase',
+  };
+
+  const { [type]: buttonStyles }: ButtonStyles = {
+    default: {
+      backgroundColor: '#FF7675',
+    },
+    outline: {
+      borderWidth: 1,
+      borderColor: '#FF7675',
+      backgroundColor: '#FFF',
+    },
+    disabled: {
+      backgroundColor: '#EEEEEE',
+    },
+  };
+
+  const { [type]: labelStyles }: LabelStyles = {
+    default: {
+      color: '#FFF',
+    },
+    outline: {
+      color: '#FF7675',
+    },
+    disabled: {
+      color: '#BBBBBB',
+    },
+  };
 
   return (
     <TouchableOpacity
       activeOpacity={isActive ? 0.5 : 1}
       onPress={handleOnPress}
       style={[
-        styles.Button,
-        buttonStyle,
-        !isActive && styles.ButtonDisabled,
+        buttonDefaultStyles,
+        buttonStyles,
+        customButtonStyle,
       ]}
     >
       <View style={{
@@ -42,9 +91,10 @@ export const Button: React.FC<ButtonProps> = ({
       >
         {icon}
         <Text style={[
-          styles.ButtonText,
-          labelStyle,
-          !isActive && styles.ButtonTextDisabled]}
+          labelDefaultStyles,
+          labelStyles,
+          customLabelStyle,
+        ]}
         >
           {children}
         </Text>
@@ -52,28 +102,3 @@ export const Button: React.FC<ButtonProps> = ({
     </TouchableOpacity>
   );
 };
-
-const styles = StyleSheet.create({
-  Button: {
-    backgroundColor: '#FF7675',
-    width: 295,
-    height: 48,
-    justifyContent: 'center',
-    alignItems: 'center',
-    alignSelf: 'center',
-    borderRadius: 5,
-    marginBottom: 20,
-  },
-  ButtonText: {
-    fontSize: 12,
-    color: '#fff',
-    fontWeight: 'bold',
-    textTransform: 'uppercase',
-  },
-  ButtonDisabled: {
-    backgroundColor: '#EEEEEE',
-  },
-  ButtonTextDisabled: {
-    color: '#BBBBBB',
-  },
-});

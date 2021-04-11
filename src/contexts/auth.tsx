@@ -81,6 +81,7 @@ export const AuthProvider: React.FC = ({ children }) => {
   }
 
   useEffect(() => {
+    AsyncStorage.clear();
     async function loadAsyncStorageData(): Promise<void> {
       const [storagedUser, storagedToken] = await AsyncStorage.multiGet([
         ASYNC_STORAGE_KEYS.AUTH_USER,

@@ -52,8 +52,8 @@ export const SignIn: React.FC = () => {
 
         <Button
           onPress={handleSignIn}
-          buttonStyle={{
-            marginTop: 20,
+          customButtonStyle={{
+            marginVertical: 20,
           }}
         >
           Entrar

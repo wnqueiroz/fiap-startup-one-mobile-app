@@ -11,6 +11,7 @@ import { Dropdown, DropdownItem } from '../components/Dropdown';
 import { Service } from '../components/Service/ServiceSearchListItem';
 import { SCREENS } from '../contants';
 import * as appointments from '../services/appointments';
+import { prettyTime } from '../utils';
 
 interface ServiceDetailsProps {
     route: { params: { service: Service } }
@@ -26,10 +27,8 @@ export const ServiceDetails: React.FC<ServiceDetailsProps> = ({ route }) => {
   const navigation = useNavigation();
 
   function getDropdownItems(): DropdownItem[] {
-    const pretty = (str: string): string => str.split(':').slice(0, -1).join(':');
-
     const data = service.servicePeriods.map(({ id, startTime, endTime }) => ({
-      label: `${pretty(startTime)} - ${pretty(endTime)}`,
+      label: prettyTime(startTime, endTime),
       value: id,
     }));
 

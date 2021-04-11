@@ -1,6 +1,7 @@
 import React from 'react';
 import {
-  Text, TouchableOpacity, View,
+  StyleProp,
+  Text, TouchableOpacity, View, ViewStyle,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
@@ -22,10 +23,11 @@ interface ServiceSearchListItemProps {
     isFirst?: boolean
     data: Service
     onPressListItem: (item: Service)=> void
+    cardStyles: StyleProp<ViewStyle>
 }
 
 export const ServiceSearchListItem: React.FC<ServiceSearchListItemProps> = ({
-  isFirst = false, data, onPressListItem,
+  isFirst = false, data, onPressListItem, cardStyles = {},
 }) => (
   <TouchableOpacity
     activeOpacity={0.5}
@@ -35,7 +37,7 @@ export const ServiceSearchListItem: React.FC<ServiceSearchListItemProps> = ({
     key={data.id}
     style={[isFirst ? { marginTop: 20 } : null]}
   >
-    <Card title={data.name}>
+    <Card title={data.name} cardStyles={cardStyles}>
       <View style={{
         flexDirection: 'row',
         justifyContent: 'space-between',

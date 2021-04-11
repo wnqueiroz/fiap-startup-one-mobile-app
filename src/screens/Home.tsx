@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import {
   StyleSheet, Text, View,
 } from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import { useNavigation } from '@react-navigation/native';
@@ -102,23 +103,30 @@ export const Home: React.FC<HomeProps> = ({ route }) => {
           left: 0,
           right: 0,
           marginTop: 110 - (48 / 2),
+          zIndex: 1,
         }}
       />
 
-      <View style={styles.Body}>
-        {showSearchListResults
-          ? (
+      {showSearchListResults
+        ? (
+          <View style={{ paddingTop: 30, flex: 1 }}>
             <ServiceSearchList
               onPressListItem={handleServiceDetails}
               data={searchResults}
             />
-          ) : (
-            <AppointmentList
-              data={appointmentList}
-              loading={loading}
-            />
-          )}
-      </View>
+          </View>
+        ) : (
+          <ScrollView
+            style={styles.Body}
+          >
+            <View style={{ paddingTop: 30 + 10 }}>
+              <AppointmentList
+                data={appointmentList}
+                loading={loading}
+              />
+            </View>
+          </ScrollView>
+        )}
     </View>
   );
 };
@@ -133,6 +141,5 @@ const styles = StyleSheet.create({
     height: 110,
     paddingHorizontal: 40,
     justifyContent: 'center',
-    marginBottom: 30 + (48 / 2),
   },
 });

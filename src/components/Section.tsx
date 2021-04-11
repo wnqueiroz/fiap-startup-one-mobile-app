@@ -7,7 +7,13 @@ interface SectionProps {
 
 export const Section: React.FC<SectionProps> = ({ title, children }) => (
   <View>
-    <Text style={{ color: '#292929', fontWeight: 'bold', fontSize: 19 }}>
+    <Text style={{
+      color: '#292929',
+      fontWeight: 'bold',
+      fontSize: 19,
+      marginBottom: 15,
+    }}
+    >
       {title}
     </Text>
     <>

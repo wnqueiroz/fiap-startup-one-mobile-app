@@ -18,6 +18,7 @@ export const ServiceSearchList: React.FC<ServiceSearchListProps> = ({
       height: 58,
       backgroundColor: '#fff',
       flexDirection: 'row',
+      marginTop: 20,
     }}
     >
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
@@ -50,6 +51,7 @@ export const ServiceSearchList: React.FC<ServiceSearchListProps> = ({
         data={data}
         renderItem={({ item: service, index }) => (
           <ServiceSearchListItem
+            cardStyles={{ marginHorizontal: 10 }}
             onPressListItem={onPressListItem}
             data={service}
             isFirst={index === 0}
