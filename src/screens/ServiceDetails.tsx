@@ -2,11 +2,15 @@ import React, { useEffect, useState } from 'react';
 import { Text, View } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
+import { useNavigation } from '@react-navigation/native';
+
 import { Button } from '../components/Button';
 import { Card } from '../components/Card';
 import { DatePicker } from '../components/DatePicker';
 import { Dropdown, DropdownItem } from '../components/Dropdown';
 import { Service } from '../components/Service/ServiceSearchListItem';
+import { SCREENS } from '../contants';
+import * as appointments from '../services/appointments';
 
 interface ServiceDetailsProps {
     route: { params: { service: Service } }
@@ -19,6 +23,8 @@ export const ServiceDetails: React.FC<ServiceDetailsProps> = ({ route }) => {
   const [period, setPeriod] = useState(null);
   const [enableButton, setEnableButton] = useState(false);
 
+  const navigation = useNavigation();
+
   function getDropdownItems(): DropdownItem[] {
     const pretty = (str: string): string => str.split(':').slice(0, -1).join(':');
 
@@ -30,8 +36,16 @@ export const ServiceDetails: React.FC<ServiceDetailsProps> = ({ route }) => {
     return data;
   }
 
-  function handleAppointment(): void {
-    console.warn({ date, period });
+  async function handleAppointment(): Promise<void> {
+    await appointments.create({
+      idService: service.id,
+      idServicePeriod: `${period}`,
+      date: new Date(date).toISOString().split('T')[0],
+    });
+
+    navigation.navigate(SCREENS.HOME, {
+      refresh: true,
+    });
   }
 
   useEffect(() => {

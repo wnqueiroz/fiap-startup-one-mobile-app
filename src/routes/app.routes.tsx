@@ -44,7 +44,13 @@ const TabRoutes: React.FC = () => (
       },
     })}
   >
-    <Tab.Screen name={SCREENS.HOME} component={Home} />
+    <Tab.Screen
+      name={SCREENS.HOME}
+      component={Home}
+      initialParams={{
+        refresh: false,
+      }}
+    />
     <Tab.Screen name={SCREENS.RANKING} component={Ranking} />
   </Tab.Navigator>
 );

@@ -11,22 +11,25 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 interface SearchBarProps {
   onBlur?: (value: string) => void;
   onClear?: () => void;
+  onChange?: (value: string) => void;
   containerStyle?: StyleProp<ViewStyle>;
+  value: string;
 }
 
 export const SearchBar: React.FC<SearchBarProps> = ({
   onBlur,
-  containerStyle,
   onClear,
+  onChange,
+  containerStyle,
+  value,
 }) => {
-  const [value, setValue] = useState('');
   const [isBlured, setIsBlured] = useState(true);
 
   const [focused, setIsFocused] = useState(false);
 
   function clearSearch(): void {
     setIsBlured(false);
-    setValue('');
+    if (onChange) onChange('');
     if (onClear) onClear();
   }
 
@@ -49,7 +52,9 @@ export const SearchBar: React.FC<SearchBarProps> = ({
           focused ? styles.SearchBarFocused : null,
         ]}
         value={value}
-        onChangeText={(newValue) => setValue(newValue)}
+        onChangeText={(newValue) => {
+          if (onChange) onChange(newValue);
+        }}
         onFocus={() => setIsFocused(true)}
         onBlur={() => {
           setIsFocused(false);

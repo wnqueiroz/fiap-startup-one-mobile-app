@@ -11,3 +11,11 @@ export const getServicesByName = async (
 ): Promise<any> => instance.get(`/v1/services?name=${name}`, {
   baseURL,
 }).then(({ data }) => data);
+
+export const create = async (payload: {
+  idService: string;
+  idServicePeriod: string;
+  date: string;
+}): Promise<any> => instance.post('/v1/appointments', payload, {
+  baseURL,
+}).then(({ data }) => data);

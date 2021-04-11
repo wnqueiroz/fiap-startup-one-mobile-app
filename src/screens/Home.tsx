@@ -17,17 +17,23 @@ import { useAuth } from '../contexts/auth';
 import { useStatusBar } from '../contexts/statusBar';
 import * as appointments from '../services/appointments';
 
-export const Home: React.FC = () => {
+interface HomeProps {
+  route: { params: { refresh: boolean } }
+}
+export const Home: React.FC<HomeProps> = ({ route }) => {
+  const { refresh } = route.params;
+
   const { user } = useAuth();
   const { setColor } = useStatusBar();
-  const { navigate } = useNavigation();
+  const navigation = useNavigation();
 
   const [loading, setLoading] = useState(true);
+  const [searchTerms, setSearchTerms] = useState('');
   const [appointmentList, setAppointmentList] = useState([]);
   const [searchResults, setSearchResults] = useState([]);
   const [showSearchListResults, setShowSearchListResults] = useState(false);
 
-  async function handleSearch(searchTerms: string): Promise<void> {
+  async function handleSearch(): Promise<void> {
     if (searchTerms.length) {
       const response = await appointments.getServicesByName(searchTerms);
 
@@ -37,24 +43,36 @@ export const Home: React.FC = () => {
   }
 
   function handleServiceDetails(service: Service): void {
-    navigate(SCREENS.SERVICE_DETAILS, {
+    navigation.navigate(SCREENS.SERVICE_DETAILS, {
       service,
     });
   }
 
+  async function fetchAllAppointments(): Promise<void> {
+    const response = await appointments.getAll();
+
+    setLoading(false);
+
+    setAppointmentList(response);
+  }
+
+  function clearSearchResults() : void {
+    setShowSearchListResults(false);
+    setSearchResults([]);
+    setSearchTerms('');
+  }
+
   useEffect(() => {
     setColor('#FF7675');
-
-    async function fetchAllAppointments(): Promise<void> {
-      const response = await appointments.getAll();
-
-      setLoading(false);
-
-      setAppointmentList(response);
-    }
-
     fetchAllAppointments();
   }, []);
+
+  React.useEffect(() => {
+    if (refresh) {
+      clearSearchResults();
+      fetchAllAppointments();
+    }
+  }, [refresh]);
 
   return (
     <View style={{ flex: 1 }}>
@@ -75,11 +93,12 @@ export const Home: React.FC = () => {
       </View>
 
       <SearchBar
+        value={searchTerms}
         onBlur={handleSearch}
-        onClear={() => {
-          setShowSearchListResults(false);
-          setSearchResults([]);
+        onChange={(newSearchTerms) => {
+          setSearchTerms(newSearchTerms);
         }}
+        onClear={clearSearchResults}
         containerStyle={{
           position: 'absolute',
           left: 0,
