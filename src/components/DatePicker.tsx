@@ -34,7 +34,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({ onSelect, label, initial
     <View style={styles.DatePickerContainer}>
       <Text style={styles.DatePickerLabel}>{label}</Text>
       <TouchableOpacity
-        activeOpacity={0.5}
+        activeOpacity={1}
         onPress={showDatePicker}
         style={styles.DatePicker}
       >
@@ -85,7 +85,6 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     backgroundColor: '#eee',
     marginBottom: 20,
-
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',

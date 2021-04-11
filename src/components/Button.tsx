@@ -9,29 +9,49 @@ export interface ButtonProps {
   buttonStyle?: StyleProp<ViewStyle>;
   labelStyle?: StyleProp<TextStyle>;
   icon?: any // TODO: set correct type,
+  isActive?: boolean
 }
 
 export const Button: React.FC<ButtonProps> = ({
-  onPress, children, buttonStyle = {}, labelStyle = {}, icon = null,
-}) => (
-  <TouchableOpacity
-    activeOpacity={0.5}
-    onPress={onPress}
-    style={[styles.Button, buttonStyle]}
-  >
-    <View style={{
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'center',
-    }}
+  onPress,
+  children,
+  buttonStyle = {},
+  labelStyle = {},
+  icon = null,
+  isActive = true,
+}) => {
+  function handleOnPress(): void {
+    if (isActive && onPress) onPress();
+  }
+
+  return (
+    <TouchableOpacity
+      activeOpacity={isActive ? 0.5 : 1}
+      onPress={handleOnPress}
+      style={[
+        styles.Button,
+        buttonStyle,
+        !isActive && styles.ButtonDisabled,
+      ]}
     >
-      {icon}
-      <Text style={[styles.ButtonText, labelStyle]}>
-        {children}
-      </Text>
-    </View>
-  </TouchableOpacity>
-);
+      <View style={{
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+      >
+        {icon}
+        <Text style={[
+          styles.ButtonText,
+          labelStyle,
+          !isActive && styles.ButtonTextDisabled]}
+        >
+          {children}
+        </Text>
+      </View>
+    </TouchableOpacity>
+  );
+};
 
 const styles = StyleSheet.create({
   Button: {
@@ -49,5 +69,11 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontWeight: 'bold',
     textTransform: 'uppercase',
+  },
+  ButtonDisabled: {
+    backgroundColor: '#EEEEEE',
+  },
+  ButtonTextDisabled: {
+    color: '#BBBBBB',
   },
 });

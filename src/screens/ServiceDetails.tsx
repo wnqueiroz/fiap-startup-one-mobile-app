@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Text, View } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import { Button } from '../components/Button';
 import { Card } from '../components/Card';
 import { DatePicker } from '../components/DatePicker';
+import { Dropdown, DropdownItem } from '../components/Dropdown';
 import { Service } from '../components/Service/ServiceSearchListItem';
 
 interface ServiceDetailsProps {
@@ -15,6 +16,31 @@ export const ServiceDetails: React.FC<ServiceDetailsProps> = ({ route }) => {
   const { service } = route.params;
 
   const [date, setDate] = useState<Date>(new Date());
+  const [period, setPeriod] = useState(null);
+  const [enableButton, setEnableButton] = useState(false);
+
+  function getDropdownItems(): DropdownItem[] {
+    const pretty = (str: string): string => str.split(':').slice(0, -1).join(':');
+
+    const data = service.servicePeriods.map(({ id, startTime, endTime }) => ({
+      label: `${pretty(startTime)} - ${pretty(endTime)}`,
+      value: id,
+    }));
+
+    return data;
+  }
+
+  function handleAppointment(): void {
+    console.warn({ date, period });
+  }
+
+  useEffect(() => {
+    if (!date || !period || period === '') {
+      setEnableButton(false);
+    } else {
+      setEnableButton(true);
+    }
+  }, [date, period]);
 
   return (
     <View style={{ paddingHorizontal: 10, paddingTop: 30 }}>
@@ -54,14 +80,19 @@ export const ServiceDetails: React.FC<ServiceDetailsProps> = ({ route }) => {
           <Text>Av. das Nações Unidas, 22540 - Jurubatuba</Text>
         </View>
       </Card>
+
       <Card title="Agendamento">
         <DatePicker
           initialDate={date}
           label="Selecione uma data"
           onSelect={(newDate) => setDate(newDate)}
         />
-
-        <Button onPress={() => console.warn('Not implemented')}>
+        <Dropdown
+          label="Selecione um horário"
+          items={getDropdownItems()}
+          onSelect={(newPeriod) => setPeriod(newPeriod)}
+        />
+        <Button onPress={handleAppointment} isActive={enableButton}>
           Agendar
         </Button>
       </Card>

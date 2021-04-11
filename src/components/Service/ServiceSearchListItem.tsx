@@ -6,9 +6,16 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import { Card } from '../Card';
 
+type ServicePeriod = {
+  id: string;
+  startTime: string;
+  endTime: string;
+}
+
 export type Service = {
     id: string
     name: string
+    servicePeriods: ServicePeriod[]
 }
 
 interface ServiceSearchListItemProps {
