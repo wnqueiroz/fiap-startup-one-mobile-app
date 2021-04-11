@@ -1,14 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import {
-  Image, StyleSheet, Text, View,
+  StyleSheet, Text, View,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import { useNavigation } from '@react-navigation/native';
-import {
-  Fade, Placeholder, PlaceholderLine,
-} from 'rn-placeholder';
 
+import { AppointmentList } from '../components/Appointment/List';
 import { SearchBar } from '../components/SearchBar';
 import { ServiceSearchList } from '../components/Service/ServiceSearchList';
 import { Service } from '../components/Service/ServiceSearchListItem';
@@ -125,49 +123,6 @@ export const Home: React.FC<HomeProps> = ({ route }) => {
   );
 };
 
-interface AppointmentListProps {
-  data?: any[],
-  loading?: boolean
-}
-
-const AppointmentList: React.FC<AppointmentListProps> = ({ data = [], loading = false }) => (loading ? (
-  <Placeholder
-    Animation={Fade}
-  >
-    <PlaceholderLine style={{ marginBottom: 20 }} />
-    <PlaceholderLine width={80} />
-    <PlaceholderLine />
-    <PlaceholderLine width={30} />
-    <PlaceholderLine width={80} height={48} style={{ alignSelf: 'center' }} />
-  </Placeholder>
-) : (
-  <>
-    <Text style={{ color: '#292929', fontWeight: 'bold', fontSize: 19 }}>
-      Sua agenda
-    </Text>
-
-    {!data.length ? (
-      <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-        <Image
-          style={styles.Image}
-          source={require('../assets/empty-calendar.png')}
-        />
-        <Text style={{ color: '#808080', fontSize: 16, fontWeight: 'bold' }}>
-          Sem compromissos
-        </Text>
-
-        <Text style={{
-          color: '#808080', fontSize: 12, marginTop: 10, textAlign: 'center',
-        }}
-        >
-          Busque por serviços na barra de pesquisa. Seus compromissos marcados aparecerão aqui.
-        </Text>
-      </View>
-    ) : null}
-
-  </>
-));
-
 const styles = StyleSheet.create({
   Body: {
     flex: 1,
@@ -179,9 +134,5 @@ const styles = StyleSheet.create({
     paddingHorizontal: 40,
     justifyContent: 'center',
     marginBottom: 30 + (48 / 2),
-  },
-  Image: {
-    width: 250,
-    height: 250,
   },
 });
