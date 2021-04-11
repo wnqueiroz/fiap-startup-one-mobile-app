@@ -11,7 +11,7 @@ import { Dropdown, DropdownItem } from '../components/Dropdown';
 import { Service } from '../components/Service/ServiceSearchListItem';
 import { SCREENS } from '../contants';
 import * as appointments from '../services/appointments';
-import { prettyTime } from '../utils';
+import { prettyCurrency, prettyTime } from '../utils';
 
 interface ServiceDetailsProps {
     route: { params: { service: Service } }
@@ -25,6 +25,8 @@ export const ServiceDetails: React.FC<ServiceDetailsProps> = ({
   const [date, setDate] = useState<Date>(new Date());
   const [period, setPeriod] = useState(null);
   const [enableButton, setEnableButton] = useState(false);
+
+  console.log('\n', service, '\n');
 
   const navigation = useNavigation();
 
@@ -75,7 +77,7 @@ export const ServiceDetails: React.FC<ServiceDetailsProps> = ({
             fontWeight: 'bold',
             color: '#FF7675',
           }}
-          >TODO
+          >{service.companyName}
           </Text>
           <Text style={{
             fontSize: 16,
@@ -83,7 +85,7 @@ export const ServiceDetails: React.FC<ServiceDetailsProps> = ({
             color: '#6FCF97',
 
           }}
-          >R$ TODO
+          >{prettyCurrency(service.price)}
           </Text>
         </View>
 
@@ -95,7 +97,7 @@ export const ServiceDetails: React.FC<ServiceDetailsProps> = ({
               marginRight: 10,
             }}
           />
-          <Text>Av. das Nações Unidas, 22540 - Jurubatuba</Text>
+          <Text>{service.companyAddress}</Text>
         </View>
       </Card>
 
@@ -113,6 +115,7 @@ export const ServiceDetails: React.FC<ServiceDetailsProps> = ({
         <Button
           onPress={handleAppointment}
           type={enableButton ? 'default' : 'disabled'}
+          customButtonStyle={{ marginTop: 10 }}
         >
           Agendar
         </Button>

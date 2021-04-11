@@ -13,3 +13,5 @@ export const prettyDate = (date: string): string => prettyWeekday(
     day: 'numeric', month: 'long', weekday: 'short',
   }).format(new Date(date)),
 );
+
+export const prettyCurrency = (value: number): string => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);

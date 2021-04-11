@@ -5,6 +5,7 @@ import {
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
+import { prettyCurrency } from '../../utils';
 import { Card } from '../Card';
 
 type ServicePeriod = {
@@ -16,6 +17,9 @@ type ServicePeriod = {
 export type Service = {
     id: string
     name: string
+    price: number
+    companyName: string
+    companyAddress: string
     servicePeriods: ServicePeriod[]
 }
 
@@ -50,7 +54,7 @@ export const ServiceSearchListItem: React.FC<ServiceSearchListItemProps> = ({
           fontWeight: 'bold',
           color: '#FF7675',
         }}
-        >TODO
+        >{data.companyName}
         </Text>
         <Text style={{
           fontSize: 16,
@@ -58,7 +62,7 @@ export const ServiceSearchListItem: React.FC<ServiceSearchListItemProps> = ({
           color: '#6FCF97',
 
         }}
-        >R$ TODO
+        >{prettyCurrency(data.price)}
         </Text>
       </View>
 
@@ -70,7 +74,7 @@ export const ServiceSearchListItem: React.FC<ServiceSearchListItemProps> = ({
             marginRight: 10,
           }}
         />
-        <Text>Av. das Nações Unidas, 22540 - Jurubatuba</Text>
+        <Text>{data.companyAddress}</Text>
       </View>
     </Card>
   </TouchableOpacity>
