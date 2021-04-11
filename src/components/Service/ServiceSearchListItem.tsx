@@ -1,8 +1,10 @@
 import React from 'react';
 import {
-  StyleSheet, Text, TouchableOpacity, View,
+  Text, TouchableOpacity, View,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+
+import { Card } from '../Card';
 
 export type Service = {
     id: string
@@ -24,76 +26,43 @@ export const ServiceSearchListItem: React.FC<ServiceSearchListItemProps> = ({
       if (onPressListItem) onPressListItem(data);
     }}
     key={data.id}
-    style={[styles.Container, isFirst ? { marginTop: 20 } : null]}
+    style={[isFirst ? { marginTop: 20 } : null]}
   >
-    <View style={styles.TabBarContainer}>
-      <Text style={{
-        fontSize: 16,
-        fontWeight: 'bold',
+    <Card title={data.name}>
+      <View style={{
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        paddingBottom: 20,
       }}
-      >{data.name}
-      </Text>
-      <View style={styles.TabBarBottomLine} />
-    </View>
-
-    <View style={{
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      paddingBottom: 20,
-    }}
-    >
-      <Text style={{
-        fontSize: 16,
-        fontWeight: 'bold',
-        color: '#FF7675',
-      }}
-      >TODO
-      </Text>
-      <Text style={{
-        fontSize: 16,
-        fontWeight: 'bold',
-        color: '#6FCF97',
-
-      }}
-      >R$ TODO
-      </Text>
-    </View>
-
-    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-      <Ionicons
-        size={20}
-        name="ios-location-outline"
-        style={{
-          marginRight: 10,
+      >
+        <Text style={{
+          fontSize: 16,
+          fontWeight: 'bold',
+          color: '#FF7675',
         }}
-      />
-      <Text>Av. das Nações Unidas, 22540 - Jurubatuba</Text>
-    </View>
+        >TODO
+        </Text>
+        <Text style={{
+          fontSize: 16,
+          fontWeight: 'bold',
+          color: '#6FCF97',
+
+        }}
+        >R$ TODO
+        </Text>
+      </View>
+
+      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+        <Ionicons
+          size={20}
+          name="ios-location-outline"
+          style={{
+            marginRight: 10,
+          }}
+        />
+        <Text>Av. das Nações Unidas, 22540 - Jurubatuba</Text>
+      </View>
+    </Card>
   </TouchableOpacity>
 );
-
-const styles = StyleSheet.create({
-  Container: {
-    backgroundColor: '#fff',
-    padding: 20,
-    borderRadius: 10,
-    marginBottom: 20,
-    flexGrow: 1,
-  },
-  TabBarContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingBottom: 20,
-    marginBottom: 20,
-  },
-  TabBarBottomLine: {
-    borderWidth: 0.5,
-    borderColor: '#EEEEEE',
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-  },
-});

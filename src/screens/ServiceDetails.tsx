@@ -3,53 +3,13 @@ import { Text, View } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import { Button } from '../components/Button';
+import { Card } from '../components/Card';
 import { DatePicker } from '../components/DatePicker';
 import { Service } from '../components/Service/ServiceSearchListItem';
 
 interface ServiceDetailsProps {
     route: { params: { service: Service } }
 }
-
-interface CardProps {
-    title: string
-}
-
-const Card: React.FC<CardProps> = ({ title, children }) => (
-  <View style={{
-    backgroundColor: '#FFF',
-    padding: 20,
-    borderRadius: 10,
-    marginBottom: 20,
-    flexGrow: 1,
-  }}
-  >
-    <View style={{
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      paddingBottom: 20,
-      marginBottom: 20,
-    }}
-    >
-      <Text style={{
-        fontSize: 16,
-        fontWeight: 'bold',
-      }}
-      >{title}
-      </Text>
-      <View style={{
-        borderWidth: 0.5,
-        borderColor: '#EEEEEE',
-        position: 'absolute',
-        bottom: 0,
-        left: 0,
-        right: 0,
-      }}
-      />
-    </View>
-    {children}
-  </View>
-);
 
 export const ServiceDetails: React.FC<ServiceDetailsProps> = ({ route }) => {
   const { service } = route.params;
