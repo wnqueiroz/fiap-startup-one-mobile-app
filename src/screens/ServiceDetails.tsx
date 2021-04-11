@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Text, View } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import { Button } from '../components/Button';
+import { DatePicker } from '../components/DatePicker';
 import { Service } from '../components/Service/ServiceSearchListItem';
 
 interface ServiceDetailsProps {
@@ -53,6 +54,8 @@ const Card: React.FC<CardProps> = ({ title, children }) => (
 export const ServiceDetails: React.FC<ServiceDetailsProps> = ({ route }) => {
   const { service } = route.params;
 
+  const [date, setDate] = useState<Date>(new Date());
+
   return (
     <View style={{ paddingHorizontal: 10, paddingTop: 30 }}>
       <Card title={service.name}>
@@ -92,6 +95,12 @@ export const ServiceDetails: React.FC<ServiceDetailsProps> = ({ route }) => {
         </View>
       </Card>
       <Card title="Agendamento">
+        <DatePicker
+          initialDate={date}
+          label="Selecione uma data"
+          onSelect={(newDate) => setDate(newDate)}
+        />
+
         <Button onPress={() => console.warn('Not implemented')}>
           Agendar
         </Button>
