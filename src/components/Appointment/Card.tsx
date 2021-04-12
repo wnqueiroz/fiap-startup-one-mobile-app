@@ -5,6 +5,7 @@ import {
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import { APPOINTMENT_STATUS } from '../../contants';
+import { useAppointments } from '../../contexts/appointments';
 import { useModal } from '../../contexts/modal';
 import * as appointments from '../../services/appointments';
 import { prettyDate, prettyTime } from '../../utils';
@@ -112,11 +113,12 @@ export const AppointmentCard: React.FC<AppointmentCardProps> = ({ data, loading 
   const formatedTime = prettyTime(servicePeriod.startTime, servicePeriod.endTime);
 
   const { openModal, closeModal, setModalContent } = useModal();
+  const { cancelAppointment } = useAppointments();
 
   const isCancelled = APPOINTMENT_STATUS.CANCEL_CUSTOMER === data.idAppointmentStatus;
 
   async function handleCancelAppointment(): Promise<void> {
-    await appointments.cancel(data.id);
+    await cancelAppointment(data.id);
 
     closeModal();
   }
@@ -132,6 +134,7 @@ export const AppointmentCard: React.FC<AppointmentCardProps> = ({ data, loading 
 
   return (
     <TouchableOpacity
+      activeOpacity={0.5}
       style={{
         opacity: isCancelled ? 0.5 : 1,
       }}

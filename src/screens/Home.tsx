@@ -66,14 +66,6 @@ export const Home: React.FC = () => {
     getScreenData();
   }, []);
 
-  React.useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {
-      clearSearchResults();
-      getScreenData();
-    });
-    return unsubscribe;
-  }, [navigation]);
-
   return (
     <View style={{ flex: 1 }}>
       <View style={styles.Header}>
@@ -126,12 +118,14 @@ export const Home: React.FC = () => {
             style={styles.Body}
           >
             <View style={{ paddingTop: 30 + 10 }}>
+              {nextAppointment && (
               <Section title="Seu próximo compromisso">
                 <AppointmentCard
                   data={nextAppointment}
                   loading={loading}
                 />
               </Section>
+              )}
               <AppointmentList
                 data={appointments}
                 loading={loading}
