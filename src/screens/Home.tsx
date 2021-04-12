@@ -18,12 +18,7 @@ import { useAuth } from '../contexts/auth';
 import { useStatusBar } from '../contexts/statusBar';
 import * as appointments from '../services/appointments';
 
-interface HomeProps {
-  route: { params: { refresh: boolean } }
-}
-export const Home: React.FC<HomeProps> = ({ route }) => {
-  const { refresh } = route.params;
-
+export const Home: React.FC = () => {
   const { user, logout } = useAuth();
   const { setColor } = useStatusBar();
   const navigation = useNavigation();

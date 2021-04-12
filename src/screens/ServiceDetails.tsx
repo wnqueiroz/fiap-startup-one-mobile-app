@@ -26,8 +26,6 @@ export const ServiceDetails: React.FC<ServiceDetailsProps> = ({
   const [period, setPeriod] = useState(null);
   const [enableButton, setEnableButton] = useState(false);
 
-  console.log('\n', service, '\n');
-
   const navigation = useNavigation();
 
   function getDropdownItems(): DropdownItem[] {
