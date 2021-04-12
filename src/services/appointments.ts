@@ -19,3 +19,7 @@ export const create = async (payload: {
 }): Promise<any> => instance.post('/v1/appointments', payload, {
   baseURL,
 }).then(({ data }) => data);
+
+export const getNextAppointment = async (): Promise<any> => instance.get('/v1/appointments/next', {
+  baseURL,
+}).then(({ data }) => data);

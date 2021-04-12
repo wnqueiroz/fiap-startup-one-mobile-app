@@ -5,9 +5,11 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { prettyDate, prettyTime } from '../../utils';
 import { Button } from '../Button';
 import { Card } from '../Card';
+import { AppointmentCardPlaceholder } from './CardPlaceholder';
 
 interface AppointmentCardProps {
     data: any
+    loading: boolean
 }
 
 interface IconTextProps {
@@ -45,7 +47,11 @@ const Line: React.FC = ({ children }) => (
   </View>
 );
 
-export const AppointmentCard: React.FC<AppointmentCardProps> = ({ data }) => {
+export const AppointmentCard: React.FC<AppointmentCardProps> = ({ data, loading }) => {
+  if (loading) return <AppointmentCardPlaceholder />;
+
+  if (!data || !Object.keys(data).length) return null;
+
   const { service, servicePeriod, date } = data;
 
   const formatedDate = prettyDate(date);

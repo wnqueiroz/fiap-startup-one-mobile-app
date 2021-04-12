@@ -7,8 +7,10 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import { useNavigation } from '@react-navigation/native';
 
+import { AppointmentCard } from '../components/Appointment/Card';
 import { AppointmentList } from '../components/Appointment/List';
 import { SearchBar } from '../components/SearchBar';
+import { Section } from '../components/Section';
 import { ServiceSearchList } from '../components/Service/ServiceSearchList';
 import { Service } from '../components/Service/ServiceSearchListItem';
 import { SCREENS } from '../contants';
@@ -31,6 +33,7 @@ export const Home: React.FC<HomeProps> = ({ route }) => {
   const [appointmentList, setAppointmentList] = useState([]);
   const [searchResults, setSearchResults] = useState([]);
   const [showSearchListResults, setShowSearchListResults] = useState(false);
+  const [nextAppointment, setNextAppointment] = useState(null);
 
   async function handleSearch(): Promise<void> {
     if (searchTerms.length) {
@@ -50,9 +53,22 @@ export const Home: React.FC<HomeProps> = ({ route }) => {
   async function fetchAllAppointments(): Promise<void> {
     const response = await appointments.getAll();
 
-    setLoading(false);
-
     setAppointmentList(response);
+  }
+
+  async function fetchNextAppointment(): Promise<void> {
+    const response = await appointments.getNextAppointment();
+
+    setNextAppointment(response);
+  }
+
+  async function getScreenData(): Promise<void> {
+    await Promise.all([
+      fetchAllAppointments(),
+      fetchNextAppointment(),
+    ]);
+
+    setLoading(false);
   }
 
   function clearSearchResults() : void {
@@ -63,15 +79,17 @@ export const Home: React.FC<HomeProps> = ({ route }) => {
 
   useEffect(() => {
     setColor('#FF7675');
-    fetchAllAppointments();
+
+    getScreenData();
   }, []);
 
   React.useEffect(() => {
-    if (refresh) {
+    const unsubscribe = navigation.addListener('focus', () => {
       clearSearchResults();
-      fetchAllAppointments();
-    }
-  }, [refresh]);
+      getScreenData();
+    });
+    return unsubscribe;
+  }, [navigation]);
 
   return (
     <View style={{ flex: 1 }}>
@@ -125,6 +143,12 @@ export const Home: React.FC<HomeProps> = ({ route }) => {
             style={styles.Body}
           >
             <View style={{ paddingTop: 30 + 10 }}>
+              <Section title="Seu próximo compromisso">
+                <AppointmentCard
+                  data={nextAppointment}
+                  loading={loading}
+                />
+              </Section>
               <AppointmentList
                 data={appointmentList}
                 loading={loading}

@@ -42,7 +42,7 @@ export const AppointmentList: React.FC<AppointmentListProps> = ({ data = [], loa
     <Section title="Sua agenda">
       {!data.length
         ? <EmptyList />
-        : data.map((item) => <AppointmentCard key={item.id} data={item} />)}
+        : data.map((item) => <AppointmentCard key={item.id} data={item} loading={loading} />)}
     </Section>
   </>
 ));
