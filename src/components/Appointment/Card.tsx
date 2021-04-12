@@ -7,7 +7,6 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { APPOINTMENT_STATUS } from '../../contants';
 import { useAppointments } from '../../contexts/appointments';
 import { useModal } from '../../contexts/modal';
-import * as appointments from '../../services/appointments';
 import { prettyDate, prettyTime } from '../../utils';
 import { Button } from '../Button';
 import { Card } from '../Card';

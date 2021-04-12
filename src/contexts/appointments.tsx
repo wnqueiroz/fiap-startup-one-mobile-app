@@ -6,12 +6,15 @@ interface AppointmentContextData {
     appointments: any[]
     nextAppointment: any
     searchServicesResults: any
+    searchServicesTerms: any
     fetchAppointments(): Promise<void>
     fetchNextAppointment(): Promise<void>
-    searchServices(searchTerms: string): Promise<void>
+    searchServices(): Promise<void>
     clearSearchServices(): void
     fetchAll(): Promise<[void, void]>
     cancelAppointment(idAppointment: string): Promise<void>
+    createAppointment(payload: { idService: string; idServicePeriod: string; date: string; }): Promise<void>
+    setTermsToSearchServices(searchTerms: string): void
 }
 
 const AppointmentContext = createContext<AppointmentContextData>({} as AppointmentContextData);
@@ -20,6 +23,7 @@ export const AppointmentsProvider: React.FC = ({ children }) => {
   const [appointments, setAppointments] = useState([]);
   const [searchServicesResults, setSearchServicesResults] = useState([]);
   const [nextAppointment, setNextAppointment] = useState(null);
+  const [searchServicesTerms, setSearchServicesTerms] = useState('');
 
   async function fetchAppointments(): Promise<void> {
     const response = await api.getAll();
@@ -42,9 +46,9 @@ export const AppointmentsProvider: React.FC = ({ children }) => {
     ]);
   }
 
-  async function searchServices(searchTerms: string): Promise<void> {
-    if (searchTerms.length) {
-      const response = await api.getServicesByName(searchTerms);
+  async function searchServices(): Promise<void> {
+    if (searchServicesTerms.length) {
+      const response = await api.getServicesByName(searchServicesTerms);
 
       setSearchServicesResults(response);
     }
@@ -56,8 +60,23 @@ export const AppointmentsProvider: React.FC = ({ children }) => {
     fetchAll();
   }
 
+  async function createAppointment(payload: { idService: string; idServicePeriod: string; date: string; }): Promise<void> {
+    await api.create({
+      idService: payload.idService,
+      idServicePeriod: payload.idServicePeriod,
+      date: payload.date,
+    });
+
+    fetchAll();
+  }
+
   function clearSearchServices(): void {
     setSearchServicesResults([]);
+    setTermsToSearchServices('');
+  }
+
+  function setTermsToSearchServices(searchTerms: string): void {
+    setSearchServicesTerms(searchTerms);
   }
 
   return (
@@ -66,11 +85,14 @@ export const AppointmentsProvider: React.FC = ({ children }) => {
       nextAppointment,
       searchServices,
       clearSearchServices,
+      searchServicesTerms,
       searchServicesResults,
       fetchAppointments,
       fetchNextAppointment,
       fetchAll,
       cancelAppointment,
+      createAppointment,
+      setTermsToSearchServices,
     }}
     >
       {children}

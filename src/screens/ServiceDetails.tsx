@@ -10,7 +10,7 @@ import { DatePicker } from '../components/DatePicker';
 import { Dropdown, DropdownItem } from '../components/Dropdown';
 import { Service } from '../components/Service/ServiceSearchListItem';
 import { SCREENS } from '../contants';
-import * as appointments from '../services/appointments';
+import { useAppointments } from '../contexts/appointments';
 import { prettyCurrency, prettyTime } from '../utils';
 
 interface ServiceDetailsProps {
@@ -27,6 +27,7 @@ export const ServiceDetails: React.FC<ServiceDetailsProps> = ({
   const [enableButton, setEnableButton] = useState(false);
 
   const navigation = useNavigation();
+  const { clearSearchServices, createAppointment } = useAppointments();
 
   function getDropdownItems(): DropdownItem[] {
     const data = service.servicePeriods.map(({
@@ -41,11 +42,13 @@ export const ServiceDetails: React.FC<ServiceDetailsProps> = ({
   }
 
   async function handleAppointment(): Promise<void> {
-    await appointments.create({
+    await createAppointment({
       idService: service.id,
       idServicePeriod: `${period}`,
       date: new Date(date).toISOString().split('T')[0],
     });
+
+    clearSearchServices();
 
     navigation.navigate(SCREENS.HOME, {
       refresh: true,

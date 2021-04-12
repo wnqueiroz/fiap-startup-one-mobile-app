@@ -30,14 +30,15 @@ export const Home: React.FC = () => {
     fetchAll,
     searchServices,
     clearSearchServices,
+    setTermsToSearchServices,
+    searchServicesTerms,
   } = useAppointments();
 
   const [loading, setLoading] = useState(true);
-  const [searchTerms, setSearchTerms] = useState('');
   const [showSearchListResults, setShowSearchListResults] = useState(false);
 
   async function handleSearch(): Promise<void> {
-    await searchServices(searchTerms);
+    await searchServices();
 
     setShowSearchListResults(true);
   }
@@ -57,7 +58,6 @@ export const Home: React.FC = () => {
   function clearSearchResults() : void {
     setShowSearchListResults(false);
     clearSearchServices();
-    setSearchTerms('');
   }
 
   useEffect(() => {
@@ -90,10 +90,10 @@ export const Home: React.FC = () => {
       </View>
 
       <SearchBar
-        value={searchTerms}
+        value={searchServicesTerms}
         onBlur={handleSearch}
         onChange={(newSearchTerms) => {
-          setSearchTerms(newSearchTerms);
+          setTermsToSearchServices(newSearchTerms);
         }}
         onClear={clearSearchResults}
         containerStyle={{
@@ -105,7 +105,7 @@ export const Home: React.FC = () => {
         }}
       />
 
-      {showSearchListResults
+      {(showSearchListResults && searchServicesResults.length)
         ? (
           <View style={{ paddingTop: 30, flex: 1 }}>
             <ServiceSearchList
