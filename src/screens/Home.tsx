@@ -14,29 +14,32 @@ import { Section } from '../components/Section';
 import { ServiceSearchList } from '../components/Service/ServiceSearchList';
 import { Service } from '../components/Service/ServiceSearchListItem';
 import { SCREENS } from '../contants';
+import { useAppointments } from '../contexts/appointments';
 import { useAuth } from '../contexts/auth';
 import { useStatusBar } from '../contexts/statusBar';
-import * as appointments from '../services/appointments';
 
 export const Home: React.FC = () => {
   const { user, logout } = useAuth();
   const { setColor } = useStatusBar();
   const navigation = useNavigation();
 
+  const {
+    appointments,
+    nextAppointment,
+    searchServicesResults,
+    fetchAll,
+    searchServices,
+    clearSearchServices,
+  } = useAppointments();
+
   const [loading, setLoading] = useState(true);
   const [searchTerms, setSearchTerms] = useState('');
-  const [appointmentList, setAppointmentList] = useState([]);
-  const [searchResults, setSearchResults] = useState([]);
   const [showSearchListResults, setShowSearchListResults] = useState(false);
-  const [nextAppointment, setNextAppointment] = useState(null);
 
   async function handleSearch(): Promise<void> {
-    if (searchTerms.length) {
-      const response = await appointments.getServicesByName(searchTerms);
+    await searchServices(searchTerms);
 
-      setSearchResults(response);
-      setShowSearchListResults(true);
-    }
+    setShowSearchListResults(true);
   }
 
   function handleServiceDetails(service: Service): void {
@@ -45,30 +48,15 @@ export const Home: React.FC = () => {
     });
   }
 
-  async function fetchAllAppointments(): Promise<void> {
-    const response = await appointments.getAll();
-
-    setAppointmentList(response);
-  }
-
-  async function fetchNextAppointment(): Promise<void> {
-    const response = await appointments.getNextAppointment();
-
-    setNextAppointment(response);
-  }
-
   async function getScreenData(): Promise<void> {
-    await Promise.all([
-      fetchAllAppointments(),
-      fetchNextAppointment(),
-    ]);
+    await fetchAll();
 
     setLoading(false);
   }
 
   function clearSearchResults() : void {
     setShowSearchListResults(false);
-    setSearchResults([]);
+    clearSearchServices();
     setSearchTerms('');
   }
 
@@ -130,7 +118,7 @@ export const Home: React.FC = () => {
           <View style={{ paddingTop: 30, flex: 1 }}>
             <ServiceSearchList
               onPressListItem={handleServiceDetails}
-              data={searchResults}
+              data={searchServicesResults}
             />
           </View>
         ) : (
@@ -145,7 +133,7 @@ export const Home: React.FC = () => {
                 />
               </Section>
               <AppointmentList
-                data={appointmentList}
+                data={appointments}
                 loading={loading}
               />
             </View>

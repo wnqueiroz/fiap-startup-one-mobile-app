@@ -5,6 +5,7 @@ import 'react-native-gesture-handler';
 
 import { NavigationContainer } from '@react-navigation/native';
 
+import { AppointmentsProvider } from './contexts/appointments';
 import { AuthProvider } from './contexts/auth';
 import { ModalProvider } from './contexts/modal';
 import { StatusBarProvider, useStatusBar } from './contexts/statusBar';
@@ -39,7 +40,9 @@ export const App: React.FC = () => {
 
           <NavigationContainer>
             <AuthProvider>
-              <Routes />
+              <AppointmentsProvider>
+                <Routes />
+              </AppointmentsProvider>
             </AuthProvider>
           </NavigationContainer>
         </SafeAreaView>
