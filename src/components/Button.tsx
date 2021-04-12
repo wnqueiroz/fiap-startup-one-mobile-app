@@ -10,6 +10,7 @@ export interface ButtonProps {
   customLabelStyle?: StyleProp<TextStyle>;
   icon?: any // TODO: set correct type,
   type?: ButtonTypes
+  small?: boolean
 }
 
 type ButtonTypes = 'default' | 'disabled' | 'outline'
@@ -24,6 +25,7 @@ export const Button: React.FC<ButtonProps> = ({
   customLabelStyle = {},
   icon = null,
   type = 'default',
+  small = false,
 }) => {
   const isActive = type !== 'disabled';
 
@@ -38,6 +40,10 @@ export const Button: React.FC<ButtonProps> = ({
     alignItems: 'center',
     alignSelf: 'center',
     borderRadius: 5,
+    ...(small && {
+      width: 100,
+      height: 40,
+    }),
   };
 
   const labelDefaultStyles: StyleProp<TextStyle> = {

@@ -3,19 +3,32 @@ import { Text, View } from 'react-native';
 
 interface SectionProps {
     title: string
+    titleRight?: Element
 }
 
-export const Section: React.FC<SectionProps> = ({ title, children }) => (
+export const Section: React.FC<SectionProps> = ({ title, titleRight = null, children }) => (
   <View>
-    <Text style={{
-      color: '#292929',
-      fontWeight: 'bold',
-      fontSize: 19,
+    <View style={{
+      flexDirection: 'row',
+      alignItems: 'center',
       marginBottom: 15,
+      justifyContent: 'space-between',
     }}
     >
-      {title}
-    </Text>
+      <Text style={{
+        color: '#292929',
+        fontWeight: 'bold',
+        fontSize: 19,
+
+      }}
+      >
+        {title}
+      </Text>
+      <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+        {titleRight}
+      </View>
+    </View>
+
     <>
       {children}
     </>

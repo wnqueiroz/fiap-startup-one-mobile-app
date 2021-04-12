@@ -9,6 +9,7 @@ import { useNavigation } from '@react-navigation/native';
 
 import { AppointmentCard } from '../components/Appointment/Card';
 import { AppointmentList } from '../components/Appointment/List';
+import { Header } from '../components/Header';
 import { SearchBar } from '../components/SearchBar';
 import { Section } from '../components/Section';
 import { ServiceSearchList } from '../components/Service/ServiceSearchList';
@@ -68,7 +69,7 @@ export const Home: React.FC = () => {
 
   return (
     <View style={{ flex: 1 }}>
-      <View style={styles.Header}>
+      <Header>
         <View style={{
           flexDirection: 'row',
           alignItems: 'center',
@@ -87,7 +88,7 @@ export const Home: React.FC = () => {
             />
           </TouchableOpacity>
         </View>
-      </View>
+      </Header>
 
       <SearchBar
         value={searchServicesTerms}
@@ -141,11 +142,5 @@ const styles = StyleSheet.create({
   Body: {
     flex: 1,
     paddingHorizontal: 10,
-  },
-  Header: {
-    backgroundColor: '#FF7675',
-    height: 110,
-    paddingHorizontal: 40,
-    justifyContent: 'center',
   },
 });
