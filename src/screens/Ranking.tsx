@@ -23,10 +23,12 @@ interface RankingCardProps {
 interface RankingCouponProps {
   title: string
   description: string
-  onPress(): void
+  onPress?(): void
   enabled?: boolean
   credits: number
   customStyles?: StyleProp<ViewStyle>
+  rescued?: boolean
+  couponCode?: string
 }
 
 export const RankingCard: React.FC<RankingCardProps> = ({
@@ -95,6 +97,8 @@ export const RankingCoupon: React.FC<RankingCouponProps> = ({
   enabled = true,
   credits,
   customStyles = {},
+  rescued = false,
+  couponCode = null,
 }) => (
   <View style={[{
     borderBottomWidth: 1,
@@ -106,7 +110,6 @@ export const RankingCoupon: React.FC<RankingCouponProps> = ({
     opacity: 0.5,
   } : null]}
   >
-
     <View>
       <Text style={{ fontSize: 16, fontWeight: 'bold', marginBottom: 20 }}>{title}</Text>
       <Text>{description}</Text>
@@ -118,10 +121,12 @@ export const RankingCoupon: React.FC<RankingCouponProps> = ({
       alignItems: 'center',
       marginTop: 20,
     }}
-    >
+    >{!rescued ? (
       <Button
         small
-        onPress={onPress}
+        onPress={() => {
+          if (onPress) onPress();
+        }}
         type={enabled ? 'default' : 'disabled'}
         customButtonStyle={{
           alignSelf: 'flex-start',
@@ -129,20 +134,42 @@ export const RankingCoupon: React.FC<RankingCouponProps> = ({
       >
         Resgatar
       </Button>
-      <CoinCredits credits={credits} />
+    )
+      : (
+        <View style={{
+          borderRadius: 5,
+          justifyContent: 'center',
+          alignItems: 'center',
+          padding: 10,
+          borderStyle: 'dashed',
+          borderColor: '#FF7675',
+          borderWidth: 1,
+        }}
+        >
+          <Text style={{
+            fontWeight: 'bold',
+          }}
+          >código: {couponCode}
+          </Text>
+        </View>
+      )}
+
+      <CoinCredits credits={credits} opacity />
     </View>
   </View>
 );
 
 interface CoinCredits {
-  credits: number
+  credits: number | string
+  opacity?: boolean
 }
 
-const CoinCredits: React.FC<CoinCredits> = ({ credits }) => (
+const CoinCredits: React.FC<CoinCredits> = ({ credits, opacity = false }) => (
   <View style={{
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    opacity: opacity ? 0.5 : 1,
   }}
   >
     <Text style={{ fontSize: 19, fontWeight: 'bold', marginRight: 10 }}>
@@ -206,6 +233,9 @@ export const Ranking: React.FC = () => {
   }, []);
 
   const rescuedCouponsIds = rescuedCoupons.map(({ id }) => id);
+  const availableCouponsIds = availableCoupons.map(({ id }) => id);
+
+  const userHasRedeemedAllCoupons = rescuedCouponsIds.every((rescuedCouponId) => availableCouponsIds.includes(rescuedCouponId));
 
   return (
     <View style={{ flex: 1 }}>
@@ -276,7 +306,7 @@ export const Ranking: React.FC = () => {
                 </View>
         )}
             >
-              {availableCoupons.length ? (
+              {availableCoupons.length && !userHasRedeemedAllCoupons ? (
                 <Card
                   cardStyles={{
                     paddingBottom: 0,
@@ -301,6 +331,28 @@ export const Ranking: React.FC = () => {
                 </Card>
               ) : null}
 
+              {rescuedCoupons.length ? (
+                <Card
+                  cardStyles={{
+                    paddingBottom: 0,
+                  }}
+                  title="Cupons resgatados"
+                >
+                  {rescuedCoupons.map((rescuedCoupon, index) => (
+                    <RankingCoupon
+                      rescued
+                      key={rescuedCoupon.id}
+                      title={rescuedCoupon.name}
+                      description={rescuedCoupon.description}
+                      credits={rescuedCoupon.credits}
+                      couponCode={rescuedCoupon.couponUsers[0].code}
+                      customStyles={index === 0 ? {
+                        paddingTop: 0,
+                      } : {}}
+                    />
+                  ))}
+                </Card>
+              ) : null}
             </Section>
 
             <Section title="Ranking geral">
