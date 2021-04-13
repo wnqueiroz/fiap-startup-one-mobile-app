@@ -114,7 +114,11 @@ export const AppointmentCard: React.FC<AppointmentCardProps> = ({ data, loading 
   const { openModal, closeModal, setModalContent } = useModal();
   const { cancelAppointment } = useAppointments();
 
-  const isCancelled = APPOINTMENT_STATUS.CANCEL_CUSTOMER === data.idAppointmentStatus;
+  const isCancelled = [
+    APPOINTMENT_STATUS.CANCEL_CUSTOMER,
+    APPOINTMENT_STATUS.CANCEL_SYSTEM,
+    APPOINTMENT_STATUS.FINISHED,
+  ].includes(data.idAppointmentStatus);
 
   async function handleCancelAppointment(): Promise<void> {
     await cancelAppointment(data.id);

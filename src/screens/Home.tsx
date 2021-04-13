@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
+  RefreshControl,
   StyleSheet, Text, TouchableOpacity, View,
 } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
@@ -51,7 +52,11 @@ export const Home: React.FC = () => {
   }
 
   async function getScreenData(): Promise<void> {
+    setRefreshing(true);
+
     await fetchAll();
+
+    setRefreshing(false);
 
     setLoading(false);
   }
@@ -64,6 +69,12 @@ export const Home: React.FC = () => {
   useEffect(() => {
     setColor('#FF7675');
 
+    getScreenData();
+  }, []);
+
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = useCallback(() => {
     getScreenData();
   }, []);
 
@@ -117,6 +128,12 @@ export const Home: React.FC = () => {
         ) : (
           <ScrollView
             style={styles.Body}
+            refreshControl={(
+              <RefreshControl
+                refreshing={refreshing}
+                onRefresh={onRefresh}
+              />
+            )}
           >
             <View style={{ paddingTop: 30 + 10 }}>
               {nextAppointment && (

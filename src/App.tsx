@@ -7,6 +7,7 @@ import { NavigationContainer } from '@react-navigation/native';
 
 import { AppointmentsProvider } from './contexts/appointments';
 import { AuthProvider } from './contexts/auth';
+import { GamificationProvider } from './contexts/gamification';
 import { ModalProvider } from './contexts/modal';
 import { StatusBarProvider, useStatusBar } from './contexts/statusBar';
 import Routes from './routes';
@@ -41,7 +42,9 @@ export const App: React.FC = () => {
           <NavigationContainer>
             <AuthProvider>
               <AppointmentsProvider>
-                <Routes />
+                <GamificationProvider>
+                  <Routes />
+                </GamificationProvider>
               </AppointmentsProvider>
             </AuthProvider>
           </NavigationContainer>

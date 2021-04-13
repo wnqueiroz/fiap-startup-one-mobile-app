@@ -10,6 +10,7 @@ import * as api from '../services/api';
 import { useStatusBar } from './statusBar';
 
 type User = {
+  id: string
   name: string
 }
 
