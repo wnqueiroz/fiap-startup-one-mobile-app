@@ -166,9 +166,17 @@ export const Ranking: React.FC = () => {
     fetchUserProgress,
     fetchRanking,
     fetchAvailableCoupons,
+    rescueCoupon,
+    rescuedCoupons,
+    fetchRescuedCoupons,
   } = useGamification();
 
   const { user } = useAuth();
+
+  async function handleWithCouponRescue(idCounpon: string): Promise<void> {
+    await rescueCoupon(idCounpon);
+    getScreenData();
+  }
 
   async function getScreenData(): Promise<void> {
     setRefreshing(true);
@@ -176,6 +184,7 @@ export const Ranking: React.FC = () => {
       fetchUserProgress(),
       fetchRanking(),
       fetchAvailableCoupons(),
+      fetchRescuedCoupons(),
     ]);
     setRefreshing(false);
   }
@@ -195,6 +204,8 @@ export const Ranking: React.FC = () => {
   const onRefresh = useCallback(() => {
     getScreenData();
   }, []);
+
+  const rescuedCouponsIds = rescuedCoupons.map(({ id }) => id);
 
   return (
     <View style={{ flex: 1 }}>
@@ -272,19 +283,21 @@ export const Ranking: React.FC = () => {
                   }}
                   title="Cupons disponíveis"
                 >
-                  {availableCoupons.map((availableCoupon, index) => (
-                    <RankingCoupon
-                      key={availableCoupon.id}
-                      enabled={!!userProgress.credits}
-                      onPress={() => console.warn('Not implemented')}
-                      title={availableCoupon.name}
-                      description={availableCoupon.description}
-                      credits={availableCoupon.credits}
-                      customStyles={index === 0 ? {
-                        paddingTop: 0,
-                      } : {}}
-                    />
-                  ))}
+                  {availableCoupons
+                    .filter((availableCoupon) => !rescuedCouponsIds.includes(availableCoupon.id))
+                    .map((availableCoupon, index) => (
+                      <RankingCoupon
+                        key={availableCoupon.id}
+                        enabled={userProgress.credits && userProgress.credits >= availableCoupon.credits}
+                        onPress={() => handleWithCouponRescue(availableCoupon.id)}
+                        title={availableCoupon.name}
+                        description={availableCoupon.description}
+                        credits={availableCoupon.credits}
+                        customStyles={index === 0 ? {
+                          paddingTop: 0,
+                        } : {}}
+                      />
+                    ))}
                 </Card>
               ) : null}
 

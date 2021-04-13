@@ -138,13 +138,15 @@ export const AppointmentCard: React.FC<AppointmentCardProps> = ({ data, loading 
   return (
     <TouchableOpacity
       activeOpacity={0.5}
-      style={{
-        opacity: isCancelled ? 0.5 : 1,
-      }}
       disabled
       onPress={() => console.warn('Not implemented')}
     >
-      <Card title={service.name}>
+      <Card
+        cardStyles={{
+          opacity: isCancelled ? 0.5 : 1,
+        }}
+        title={service.name}
+      >
         <Line>
           <IconText iconName="ios-calendar-outline" text={formatedDate} />
           <IconText iconName="ios-time-outline" text={formatedTime} />
