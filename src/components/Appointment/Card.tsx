@@ -141,7 +141,7 @@ export const AppointmentCard: React.FC<AppointmentCardProps> = ({ data, loading 
       style={{
         opacity: isCancelled ? 0.5 : 1,
       }}
-      disabled={isCancelled}
+      disabled
       onPress={() => console.warn('Not implemented')}
     >
       <Card title={service.name}>
