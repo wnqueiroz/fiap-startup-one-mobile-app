@@ -33,7 +33,7 @@ export const Walkthrough: React.FC = () => {
     sourceImage: require('../assets/walkthrough-step-02.png'),
   }, {
     title: 'Acumule pontos e ganhe recompensas!',
-    subtitle: 'Sempre que cumprir um compromisso, você pode acumular experiência, subir de nível e obter recompensas exclusivas dos estabelecimentos. Teste sua sorte com a nossa roleta de recompensas!',
+    subtitle: 'Sempre que cumprir um compromisso, você pode acumular experiência, subir de nível e obter recompensas exclusivas para usar nos estabelecimentos!',
     sourceImage: require('../assets/walkthrough-step-03.png'),
   }];
 
