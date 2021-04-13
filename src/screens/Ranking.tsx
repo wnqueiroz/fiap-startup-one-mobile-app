@@ -206,14 +206,12 @@ export const Ranking: React.FC = () => {
   }
 
   async function getScreenData(): Promise<void> {
-    setRefreshing(true);
     await Promise.all([
       fetchUserProgress(),
       fetchRanking(),
       fetchAvailableCoupons(),
       fetchRescuedCoupons(),
     ]);
-    setRefreshing(false);
   }
 
   useEffect(() => {
@@ -229,7 +227,12 @@ export const Ranking: React.FC = () => {
   const [refreshing, setRefreshing] = useState(false);
 
   const onRefresh = useCallback(() => {
-    getScreenData();
+    async function handleRefresh(): Promise<void> {
+      setRefreshing(true);
+      await getScreenData();
+      setRefreshing(false);
+    }
+    handleRefresh();
   }, []);
 
   const rescuedCouponsIds = rescuedCoupons.map(({ id }) => id);

@@ -52,11 +52,7 @@ export const Home: React.FC = () => {
   }
 
   async function getScreenData(): Promise<void> {
-    setRefreshing(true);
-
     await fetchAll();
-
-    setRefreshing(false);
 
     setLoading(false);
   }
@@ -75,7 +71,12 @@ export const Home: React.FC = () => {
   const [refreshing, setRefreshing] = useState(false);
 
   const onRefresh = useCallback(() => {
-    getScreenData();
+    async function handleRefresh(): Promise<void> {
+      setRefreshing(true);
+      await getScreenData();
+      setRefreshing(false);
+    }
+    handleRefresh();
   }, []);
 
   return (
