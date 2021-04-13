@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import {
-  Image, RefreshControl, StyleSheet, Text, View,
+  Image, RefreshControl, StyleProp, StyleSheet, Text, View, ViewStyle,
 } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import * as Progress from 'react-native-progress';
@@ -22,8 +22,11 @@ interface RankingCardProps {
 
 interface RankingCouponProps {
   title: string
+  description: string
   onPress(): void
   enabled?: boolean
+  credits: number
+  customStyles?: StyleProp<ViewStyle>
 }
 
 export const RankingCard: React.FC<RankingCardProps> = ({
@@ -85,37 +88,84 @@ export const RankingCard: React.FC<RankingCardProps> = ({
   </View>
 );
 
-export const RankingCoupon: React.FC<RankingCouponProps> = ({ title, onPress, enabled = true }) => (
+export const RankingCoupon: React.FC<RankingCouponProps> = ({
+  title,
+  description,
+  onPress,
+  enabled = true,
+  credits,
+  customStyles = {},
+}) => (
   <View style={[{
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
     borderBottomWidth: 1,
     paddingVertical: 20,
     borderColor: '#EEEEEE',
-  }, !enabled ? {
+  },
+  customStyles,
+  !enabled ? {
     opacity: 0.5,
   } : null]}
   >
-    <Text style={{
-      maxWidth: 250,
-      flexWrap: 'wrap',
+
+    <View>
+      <Text style={{ fontSize: 16, fontWeight: 'bold', marginBottom: 20 }}>{title}</Text>
+      <Text>{description}</Text>
+    </View>
+
+    <View style={{
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      marginTop: 20,
     }}
-    >{title}
-    </Text>
-    <Button
-      small
-      onPress={onPress}
-      type={enabled ? 'default' : 'disabled'}
     >
-      Resgatar
-    </Button>
+      <Button
+        small
+        onPress={onPress}
+        type={enabled ? 'default' : 'disabled'}
+        customButtonStyle={{
+          alignSelf: 'flex-start',
+        }}
+      >
+        Resgatar
+      </Button>
+      <CoinCredits credits={credits} />
+    </View>
+  </View>
+);
+
+interface CoinCredits {
+  credits: number
+}
+
+const CoinCredits: React.FC<CoinCredits> = ({ credits }) => (
+  <View style={{
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  }}
+  >
+    <Text style={{ fontSize: 19, fontWeight: 'bold', marginRight: 10 }}>
+      {credits}
+    </Text>
+    <Image
+      style={{
+        width: 20,
+        height: 20,
+      }}
+      source={require('../assets/ranking-coin.png')}
+    />
   </View>
 );
 
 export const Ranking: React.FC = () => {
   const {
-    fetchUserProgress, userProgress, fetchRanking, ranking,
+    ranking,
+    availableCoupons,
+    userProgress,
+    fetchUserProgress,
+    fetchRanking,
+    fetchAvailableCoupons,
   } = useGamification();
 
   const { user } = useAuth();
@@ -125,6 +175,7 @@ export const Ranking: React.FC = () => {
     await Promise.all([
       fetchUserProgress(),
       fetchRanking(),
+      fetchAvailableCoupons(),
     ]);
     setRefreshing(false);
   }
@@ -214,33 +265,29 @@ export const Ranking: React.FC = () => {
                 </View>
         )}
             >
-              <Card
-                cardStyles={{
-                  paddingBottom: 0,
-                }}
-                title="Resgates disponíveis"
-              >
-                <RankingCoupon
-                  enabled={!!userProgress.credits}
-                  onPress={() => console.warn('Not implemented')}
-                  title="Cupom de R$ 10,00 em qualquer estabelecimento"
-                />
-                <RankingCoupon
-                  enabled={!!userProgress.credits}
-                  onPress={() => console.warn('Not implemented')}
-                  title="Cupom de R$ 10,00 em qualquer estabelecimento"
-                />
-                <RankingCoupon
-                  enabled={!!userProgress.credits}
-                  onPress={() => console.warn('Not implemented')}
-                  title="Cupom de R$ 10,00 em qualquer estabelecimento"
-                />
-                <RankingCoupon
-                  enabled={!!userProgress.credits}
-                  onPress={() => console.warn('Not implemented')}
-                  title="Cupom de R$ 10,00 em qualquer estabelecimento"
-                />
-              </Card>
+              {availableCoupons.length ? (
+                <Card
+                  cardStyles={{
+                    paddingBottom: 0,
+                  }}
+                  title="Cupons disponíveis"
+                >
+                  {availableCoupons.map((availableCoupon, index) => (
+                    <RankingCoupon
+                      key={availableCoupon.id}
+                      enabled={!!userProgress.credits}
+                      onPress={() => console.warn('Not implemented')}
+                      title={availableCoupon.name}
+                      description={availableCoupon.description}
+                      credits={availableCoupon.credits}
+                      customStyles={index === 0 ? {
+                        paddingTop: 0,
+                      } : {}}
+                    />
+                  ))}
+                </Card>
+              ) : null}
+
             </Section>
 
             <Section title="Ranking geral">
@@ -257,7 +304,6 @@ export const Ranking: React.FC = () => {
             </Section>
           </View>
         </ScrollView>
-
       </>
       )}
     </View>

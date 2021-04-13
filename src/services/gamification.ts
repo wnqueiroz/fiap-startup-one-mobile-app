@@ -11,3 +11,8 @@ export const getRanking = async (): Promise<any> => instance
   .get('/v1/ranking', {
     baseURL,
   }).then(({ data }) => data);
+
+export const getCoupons = async (): Promise<any> => instance
+  .get('/v1/coupons', {
+    baseURL,
+  }).then(({ data }) => data);
