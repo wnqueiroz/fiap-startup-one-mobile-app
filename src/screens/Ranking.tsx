@@ -154,7 +154,7 @@ export const RankingCoupon: React.FC<RankingCouponProps> = ({
         </View>
       )}
 
-      <CoinCredits credits={credits} opacity />
+      <CoinCredits credits={credits} opacity={!rescued} />
     </View>
   </View>
 );
@@ -169,7 +169,7 @@ const CoinCredits: React.FC<CoinCredits> = ({ credits, opacity = false }) => (
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    opacity: opacity ? 0.5 : 1,
+    opacity: !opacity ? 0.5 : 1,
   }}
   >
     <Text style={{ fontSize: 19, fontWeight: 'bold', marginRight: 10 }}>
@@ -235,7 +235,7 @@ export const Ranking: React.FC = () => {
   const rescuedCouponsIds = rescuedCoupons.map(({ id }) => id);
   const availableCouponsIds = availableCoupons.map(({ id }) => id);
 
-  const userHasRedeemedAllCoupons = rescuedCouponsIds.every((rescuedCouponId) => availableCouponsIds.includes(rescuedCouponId));
+  const userHasRedeemedAllCoupons = availableCouponsIds.length === rescuedCouponsIds.length;
 
   return (
     <View style={{ flex: 1 }}>

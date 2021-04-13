@@ -112,7 +112,7 @@ export const AppointmentCard: React.FC<AppointmentCardProps> = ({ data, loading 
   const formatedTime = prettyTime(servicePeriod.startTime, servicePeriod.endTime);
 
   const { openModal, closeModal, setModalContent } = useModal();
-  const { cancelAppointment } = useAppointments();
+  const { cancelAppointment, finishAppointment } = useAppointments();
 
   const isCancelled = [
     APPOINTMENT_STATUS.CANCEL_CUSTOMER,
@@ -124,6 +124,10 @@ export const AppointmentCard: React.FC<AppointmentCardProps> = ({ data, loading 
     await cancelAppointment(data.id);
 
     closeModal();
+  }
+
+  async function handleFinishAppointment(): Promise<void> {
+    await finishAppointment(data.id);
   }
 
   function openCancelAppointmentModal(): void {
@@ -166,6 +170,19 @@ export const AppointmentCard: React.FC<AppointmentCardProps> = ({ data, loading 
         >
           Desmarcar
         </Button>
+
+        {!isCancelled ? (
+          <Button
+            onPress={handleFinishAppointment}
+            customButtonStyle={{
+              marginTop: 10,
+
+            }}
+          >
+            Simular conclusão
+          </Button>
+        ) : null}
+
       </Card>
     </TouchableOpacity>
   );

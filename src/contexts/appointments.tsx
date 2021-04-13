@@ -15,6 +15,7 @@ interface AppointmentContextData {
     cancelAppointment(idAppointment: string): Promise<void>
     createAppointment(payload: { idService: string; idServicePeriod: string; date: string; }): Promise<void>
     setTermsToSearchServices(searchTerms: string): void
+    finishAppointment(idAppointment: string): Promise<void>
 }
 
 const AppointmentContext = createContext<AppointmentContextData>({} as AppointmentContextData);
@@ -60,6 +61,12 @@ export const AppointmentsProvider: React.FC = ({ children }) => {
     fetchAll();
   }
 
+  async function finishAppointment(idAppointment: string): Promise<void> {
+    await api.finish(idAppointment);
+
+    fetchAll();
+  }
+
   async function createAppointment(payload: { idService: string; idServicePeriod: string; date: string; }): Promise<void> {
     await api.create({
       idService: payload.idService,
@@ -93,6 +100,7 @@ export const AppointmentsProvider: React.FC = ({ children }) => {
       cancelAppointment,
       createAppointment,
       setTermsToSearchServices,
+      finishAppointment,
     }}
     >
       {children}

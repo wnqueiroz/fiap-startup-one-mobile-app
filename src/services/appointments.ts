@@ -30,3 +30,8 @@ export const cancel = async (idAppointment: string): Promise<any> => instance
   .post(`/v1/appointments/${idAppointment}/cancel`, {}, {
     baseURL,
   }).then(({ data }) => data);
+
+export const finish = async (idAppointment: string): Promise<any> => instance
+  .post(`/v1/appointments/${idAppointment}/finish`, {}, {
+    baseURL,
+  }).then(({ data }) => data);
